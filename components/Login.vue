@@ -31,12 +31,22 @@
 </template>
 
 <script setup>
+import { saveUsers } from '@/store/user'
+import { storeToRefs } from 'pinia'
+const store = saveUsers()
+
+const { userId } = storeToRefs(store)
+
 import axios from "axios";
 const { $toast, $router } = useNuxtApp();
 
 const email = ref("");
 const senha = ref("");
 const modal = ref(false);
+
+definePageMeta({
+  layout: ''
+})
 
 onBeforeMount(() => {
   getUsers();
@@ -60,7 +70,10 @@ const login = () => {
   axios
     .post("http://localhost:3000/users/login", userData)
     .then((response) => {
-      if (!response.data.success) $toast.error(response.data.message);
+      if (!response.data.success){
+         $toast.error(response.data.message);
+         console.log(response.data);
+      }
       else $router.push("/home");
     })
     .catch((error) => {

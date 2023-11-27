@@ -1,14 +1,12 @@
 <template>
-
-<h1>Home</h1>
-
+    <Header />
 </template>
-
 <script setup>
-definePageMeta({
-   layout: 'default'
-})
 </script>
-
 <style scoped>
+
+*{
+  background-color: cornsilk;
+}
+
 </style>
