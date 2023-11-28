@@ -17,8 +17,6 @@ export default defineNuxtConfig({
         ],
   
     },
-    pageTransition: { name: 'page', mode: 'out-in' },
-    layoutTransition: { name: 'slide-left', mode: 'out-in' }
   },
 
   components: true,
@@ -45,6 +43,12 @@ export default defineNuxtConfig({
 
   devServer:{
     port: 8080
+  },
+
+  dir:{
+    assets: 'assets',
+    pages: 'pages',
+    static: 'static'
   }
 
 })

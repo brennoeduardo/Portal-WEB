@@ -1,5 +1,5 @@
 <template>
-    <v-app style="width: 100%; height: 100%">
+    <v-app>
       <Header/>
           <slot />
     </v-app>
