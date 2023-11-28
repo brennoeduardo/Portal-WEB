@@ -1,7 +1,8 @@
 <template>
-  <Login></Login>
+    <Login></Login>
 </template>
 <script setup>
+
 </script>
 <style scoped>
 </style>

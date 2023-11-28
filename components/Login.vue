@@ -44,10 +44,6 @@ const email = ref("");
 const senha = ref("");
 const modal = ref(false);
 
-definePageMeta({
-  layout: ''
-})
-
 onBeforeMount(() => {
   getUsers();
 });
