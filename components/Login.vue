@@ -1,82 +1,65 @@
 <template>
   <v-card class="mx-auto my-auto" width="300px" height="auto">
     <v-col>
-      <v-text-field
-        type="email"
-        placeholder="Insira seu e-mail"
-        variant="outlined"
-        density="compact"
-        v-model="email"
+
+      <v-text-field type="email" placeholder="Insira seu e-mail" variant="outlined" density="compact" v-model="email"
       ></v-text-field>
-      <v-text-field
-        type="password"
-        placeholder="Insira sua senha"
-        variant="outlined"
-        density="compact"
-        v-model="senha"
+      <v-text-field type="password" placeholder="Insira sua senha" variant="outlined" density="compact" v-model="senha"
       ></v-text-field>
+      
     </v-col>
     <v-col>
+
       <v-row class="d-flex justify-center align-center pa-3">
         <v-btn color="primary" text @click="login">Entrar</v-btn>
-        <v-btn
-          text="Cadastre-se"
-          variant="text"
-          @click="modal = !modal"
-        ></v-btn>
+        <v-btn text="Cadastre-se" variant="text" @click="modal = !modal"></v-btn>
       </v-row>
+
     </v-col>
   </v-card>
   <Register v-model="modal" @register="modal = !modal" />
 </template>
 
 <script setup>
-import { saveUsers } from '@/store/user'
-import { storeToRefs } from 'pinia'
-const store = saveUsers()
-
-const { userId } = storeToRefs(store)
-
 import axios from "axios";
+import { useUsersStore } from '../store/user';
+import { storeToRefs } from 'pinia';
+
+const store = useUsersStore();
+
+const users = storeToRefs(store);
+
 const { $toast, $router } = useNuxtApp();
 
-const email = ref("");
-const senha = ref("");
+
+const email = ref(null);
+const senha = ref(null);
 const modal = ref(false);
 
 onBeforeMount(() => {
-  getUsers();
 });
 
-const getUsers = () => {
-  axios.get("http://localhost:3000/users/")
-    .then((response) => {
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
+const login = async () => {
+  try {
+    const userData = {
+      email: email.value,
+      password: senha.value,
+    };
 
-const login = () => {
-  const userData = {
-    email: email.value,
-    password: senha.value,
-  };
-  axios
-    .post("http://localhost:3000/users/login", userData)
-    .then((response) => {
-      if (!response.data.success){
-         $toast.error(response.data.message);
-         console.log(response.data);
-      }
-      else $router.push("/home");
-    })
-    .catch((error) => {
-      console.log(error);
-      $toast.error("Erro ao fazer login");
-    });
-  userData.email = null;
-  userData.senha = null;
-};
+    const { data: {success, message, data} } = await axios.post("http://localhost:3000/users/login", userData)
+    if(!success) $toast.error(message)
+
+    $toast.success(message)
+    users.userId = data
+    $router.push("/home")
+
+    userData.email = null
+    userData.senha = null
+
+  } catch (error) {
+    $toast.error(error.message)
+  }
+}
+
+
 </script>

@@ -1,16 +1,12 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
-export const saveUsers = defineStore('users', {
-    state: () => ({
-        userId: null
-    }), 
-    actions: {
-        saveUserId(state) {
-            this.userId = state
-        } 
-    } 
-
-})
-
-
-
+export const useUsersStore = defineStore('users', {
+  state: () => ({
+    userId: null,
+  }), 
+  actions: {
+    saveUserId(userId) {
+      this.userId = userId;
+    },
+  },
+});
