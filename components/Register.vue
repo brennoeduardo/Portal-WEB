@@ -26,49 +26,50 @@
 <script setup>
 import axios from "axios";
 
+const { $toast } = useNuxtApp();
+
 const props = defineProps({
   value: Boolean
 })
 
+const emit = defineEmits(['input', 'register'])
+
 const input = computed({
     show: {
       get() {
-        return this.value;
+        return props.value;
       },
       set(value) {
-        this.$emit("input", value);
+        emit("input", value);
       },
     },
 })
 
 const form = reactive({
-  nome: "",
-  sobrenome: "",
-  email: "",
-  password: ""
+  nome: null,
+  sobrenome: null,
+  email: null,
+  password: null
 })
 
-const registerUser = () => {
+const registerUser = async () => {
 
     const userData = {
-        name: this.form.nome,
-        last_name: this.form.sobrenome,
-        email: this.form.email,
-        password: this.form.password,
+        name: form.nome,
+        last_name: form.sobrenome,
+        email: form.email,
+        password: form.password,
         ativo: true,
       }
 
-      axios.post("http://localhost:3000/users/", userData)
-        .then((response) => {
-          if (response.status == 200) {
-            this.$emit("input", false);
-            this.$emit("register", true);
-          }
-          alert("Usuário cadastrado com sucesso!");
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      const { data: { success, message, data }} = await axios.post("http://localhost:3000/users/", userData)
+
+      if(!success) $toast.error(message)
+      
+      emit("input", false);
+      $toast.success(message)
+      emit("register", true);
+
 }
 
 </script>
